@@ -8,6 +8,8 @@
 // FOR EXAMPLE, IT IS MISSING THE NECESSARY EXCEPTION HANDLING
 
 
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.security.cert.X509Certificate;
@@ -15,31 +17,49 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 
 public class MyTLSFileClient {
-  public static void main(String args[])
+  public static void main(String args[])throws Exception
   {
-    SSLSocketFactory factory = (SSLSocketFactory)SSLSocketFactory.getDefault();
-    SSLSocket socket = (SSLSocket)factory.createSocket(<host>, <port>);
 
-    // set HTTPS-style checking of HostName _before_ 
-    // the handshake
-    SSLParameters params = new SSLParameters();
-    params.setEndpointIdentificationAlgorithm("HTTPS");
-    socket.setSSLParameters(params);
+    //check amount of args is 1 
+    if (args.length != 3){
+      System.out.println("Usage: java MyTSLFileClient <host> <port> <file>");
+      return;
+    }
+    
+    String hostName = args[0];
+    int port = Integer.parseInt(args[1]);
+    String file = args[2];
 
-    socket.startHandshake(); // explicitly starting the TLS handshake
 
-    // at this point, can use getInputStream and 
-    // getOutputStream methods as you would in a regular Socket
+    try{
+      SSLSocketFactory factory = (SSLSocketFactory)SSLSocketFactory.getDefault();
+      SSLSocket socket = (SSLSocket)factory.createSocket(hostName, port);
 
-    // get the X509Certificate for this session
-    SSLSession session = socket.getSession();
-    X509Certificate cert = (X509Certificate) session.getPeerCertificates()[0];
+      // set HTTPS-style checking of HostName _before_ 
+      // the handshake
+      SSLParameters params = new SSLParameters();
+      // params.setEndpointIdentificationAlgorithm("HTTPS");
+      socket.setSSLParameters(params);
 
-    // extract the CommonName, and then compare
-    getCommonName(cert);
+      socket.startHandshake(); // explicitly starting the TLS handshake
+
+      // at this point, can use getInputStream and 
+      // getOutputStream methods as you would in a regular Socket
+
+      // get the X509Certificate for this session
+      SSLSession session = socket.getSession();
+      X509Certificate cert = (X509Certificate) session.getPeerCertificates()[0];
+
+      // extract the CommonName, and then compare
+      getCommonName(cert);
+    }
+    catch(Exception ex){
+      System.err.println(ex.toString());
+    }
+
   }
 
-  String getCommonName(X509Certificate cert)
+  static String getCommonName(X509Certificate cert) throws Exception
   {
     String name = cert.getSubjectX500Principal().getName();
     LdapName ln = new LdapName(name);

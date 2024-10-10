@@ -22,6 +22,7 @@ F9:E8:C8:09:47:9D:D2:E3:52:13:C5:73:3A:9E:86:4F:A0:C4:EA:7A:96:32:06:B7:52:E8:E9
 ## Step 4
 
 F: The exception from the first command:
+javax.net.ssl.SSLHandshakeException: Received fatal alert: certificate_unknown
 
 
 G: The exception from the second command:

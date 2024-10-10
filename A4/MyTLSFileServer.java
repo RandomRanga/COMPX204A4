@@ -45,7 +45,7 @@ public class MyTLSFileServer {
 
       // Store the passphrase to unlock the JKS file.   
       // INSECURE! DON'T DO IT.
-      char[] passphrase = "<qwerty>".toCharArray();
+      char[] passphrase = "asdfgh".toCharArray();
 
       // Load the keystore file. The passphrase is   
       // an optional parameter to allow for integrity   
@@ -66,10 +66,13 @@ public class MyTLSFileServer {
       return ssf;
    }
 
-   static void main(String args[]) throws Exception
+   public static void main(String args[]) throws Exception
    { 
-
-      //check port exists 
+      //check amount of args is 1 
+      if (args.length != 1){
+         System.out.println("Usage: java MyTSLFileServer <port>");
+         return;
+      }
       
  
       int port = Integer.parseInt(args[0]);
@@ -87,13 +90,13 @@ public class MyTLSFileServer {
          SSLSocket s = (SSLSocket)ss.accept();
 
          while(true){
-            // try(SSLSocket s = (SSLSocket) ss.accept()){
-
                System.out.println("connected");
 
                // I/O streams to force TLS handshake 
                BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+               System.out.println("reader");
                BufferedOutputStream bos = new BufferedOutputStream(s.getOutputStream());
+               System.out.println("hsdfhakj");
 
                //reads the files requested still in hand shake 
                String name = reader.readLine();
@@ -117,14 +120,8 @@ public class MyTLSFileServer {
                }
                else {
                   System.err.println("file not found");
-               }
-               
+               }  
                bos.flush();
-
-            // }
-            // catch(IOException ex){
-            //    System.err.println(ex.toString());
-            // }
          }
             
       }
