@@ -68,6 +68,7 @@ public class MyTLSFileServer {
 
    public static void main(String args[]) throws Exception
    { 
+
       //check amount of args is 1 
       if (args.length != 1){
          System.out.println("Usage: java MyTSLFileServer <port>");

@@ -49,9 +49,10 @@ public class MyTLSFileClient {
       // get the X509Certificate for this session
       SSLSession session = socket.getSession();
       X509Certificate cert = (X509Certificate) session.getPeerCertificates()[0];
+      System.out.println("common name: " + getCommonName(cert));
 
       // extract the CommonName, and then compare
-      getCommonName(cert);
+      // getCommonName(cert);
     }
     catch(Exception ex){
       System.err.println(ex.toString());
